@@ -10,7 +10,7 @@ User's will be able to:
 - Traverse a scrollable enviornment
 
 # Wireframes
-(To be added)
+![WireFrame](https://user-images.githubusercontent.com/50244853/122831243-7389ab80-d29e-11eb-9853-1103b27cd1a5.png)
 
 # Technologies
 
