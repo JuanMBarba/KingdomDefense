@@ -1,0 +1,32 @@
+{
+  "name": "js_project",
+  "version": "1.0.0",
+  "description": "ProjectJS is a side scrolling action game where you take control of the playable character, MC, who will be able to run, jump, and attack enemies on the field. You have to make it to the end while attacking or avoiding enemies to win.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "webpack --watch --mode=development"
+  },
+  "engines": {
+    "node": "16.0.0",
+    "npm": "7.10.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JuanMBarba/JSProject.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/JuanMBarba/JSProject/issues"
+  },
+  "homepage": "https://github.com/JuanMBarba/JSProject#readme",
+  "dependencies": {
+    "@babel/core": "^7.14.6",
+    "@babel/preset-env": "^7.14.5",
+    "babel-loader": "^8.2.2",
+    "webpack": "^5.40.0",
+    "webpack-cli": "^4.7.2"
+  }
+}
