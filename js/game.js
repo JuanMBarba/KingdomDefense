@@ -1,4 +1,5 @@
 import MovingObject from "./moving_object";
+import Border from "./border";
 
 export default class Game{
     constructor(){
@@ -13,6 +14,14 @@ export default class Game{
         }
     
         this.mo = new MovingObject(this);
+        this.borders = [];
+        this.populateBorders();
+    }
+
+    populateBorders(){
+        for (let i = 0; i < 12; i++) {
+            this.borders.push(new Border(0 + 100 * i,  this.DIM_Y - 100, 100, 100, 1))
+        }
     }
 
     draw(ctx){
@@ -21,7 +30,11 @@ export default class Game{
         ctx.fillRect(0, 0, 1200, 600);
 
         //moving object
-        this.mo.draw(ctx)
+        this.mo.draw(ctx);
+        this.borders.forEach( border => {
+
+            border.draw(ctx)
+        });
     }
 
     step(){

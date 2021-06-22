@@ -11,7 +11,7 @@ export default class MovingObject{
         this.friction = 0.3;
         this.pos ={
             x: game.DIM_X / 2 - this.width / 2 ,
-            y: game.DIM_Y - this.height - 10
+            y: game.DIM_Y - this.height - 110
         }
     }
 
@@ -35,8 +35,7 @@ export default class MovingObject{
             this.vel.y = -15
         }
 
-        this.vel.y += 2 
-
+        this.vel.y <= this.maxSpeed ? this.vel.y += 2 : "";
 
     }
 

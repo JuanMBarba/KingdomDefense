@@ -2,6 +2,53 @@
 /******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ({
 
+/***/ "./js/border.js":
+/*!**********************!*\
+  !*** ./js/border.js ***!
+  \**********************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ Border)
+/* harmony export */ });
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+var Border = /*#__PURE__*/function () {
+  function Border(x, y, width, height, type) {
+    _classCallCheck(this, Border);
+
+    this.x = x;
+    this.y = y;
+    this.width = width;
+    this.height = height;
+    this.type = type;
+  }
+
+  _createClass(Border, [{
+    key: "draw",
+    value: function draw(ctx) {
+      if (this.type === 1) {
+        ctx.fillStyle = "green";
+      } else if (this.type === 2) {
+        ctx.fillStyle = "brown";
+      }
+
+      ctx.fillRect(this.x, this.y, this.width, this.height);
+    }
+  }]);
+
+  return Border;
+}();
+
+
+
+/***/ }),
+
 /***/ "./js/game.js":
 /*!********************!*\
   !*** ./js/game.js ***!
@@ -13,11 +60,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (/* binding */ Game)
 /* harmony export */ });
 /* harmony import */ var _moving_object__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./moving_object */ "./js/moving_object.js");
+/* harmony import */ var _border__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./border */ "./js/border.js");
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
 
 
 
@@ -34,9 +83,18 @@ var Game = /*#__PURE__*/function () {
       rightKey: false
     };
     this.mo = new _moving_object__WEBPACK_IMPORTED_MODULE_0__.default(this);
+    this.borders = [];
+    this.populateBorders();
   }
 
   _createClass(Game, [{
+    key: "populateBorders",
+    value: function populateBorders() {
+      for (var i = 0; i < 12; i++) {
+        this.borders.push(new _border__WEBPACK_IMPORTED_MODULE_1__.default(0 + 100 * i, this.DIM_Y - 100, 100, 100, 1));
+      }
+    }
+  }, {
     key: "draw",
     value: function draw(ctx) {
       //background
@@ -44,6 +102,9 @@ var Game = /*#__PURE__*/function () {
       ctx.fillRect(0, 0, 1200, 600); //moving object
 
       this.mo.draw(ctx);
+      this.borders.forEach(function (border) {
+        border.draw(ctx);
+      });
     }
   }, {
     key: "step",
@@ -167,7 +228,7 @@ var MovingObject = /*#__PURE__*/function () {
     this.friction = 0.3;
     this.pos = {
       x: game.DIM_X / 2 - this.width / 2,
-      y: game.DIM_Y - this.height - 10
+      y: game.DIM_Y - this.height - 110
     };
   }
 
@@ -194,7 +255,7 @@ var MovingObject = /*#__PURE__*/function () {
         this.vel.y = -15;
       }
 
-      this.vel.y += 2;
+      this.vel.y <= this.maxSpeed ? this.vel.y += 2 : "";
     }
   }, {
     key: "step",
