@@ -27,6 +27,12 @@ var Game = /*#__PURE__*/function () {
 
     this.DIM_X = 1200;
     this.DIM_Y = 600;
+    this.keys = {
+      upKey: false,
+      downKey: false,
+      leftKey: false,
+      rightKey: false
+    };
     this.mo = new _moving_object__WEBPACK_IMPORTED_MODULE_0__.default(this);
   }
 
@@ -42,7 +48,7 @@ var Game = /*#__PURE__*/function () {
   }, {
     key: "step",
     value: function step() {
-      this.mo.update();
+      this.mo.step();
     }
   }]);
 
@@ -88,14 +94,39 @@ var GameView = /*#__PURE__*/function () {
     value: function start() {
       var _this = this;
 
-      // this.bindKeyHandlers();
+      this.bindKeyHandlers();
       setInterval(function () {
         _this.game.step(), _this.game.draw(_this.ctx);
       }, 1000 / 30);
     }
   }, {
     key: "bindKeyHandlers",
-    value: function bindKeyHandlers() {}
+    value: function bindKeyHandlers() {
+      var _this2 = this;
+
+      document.addEventListener("keydown", function (e) {
+        if (e.key === "w") {
+          _this2.game.keys.upKey = true;
+        } else if (e.key === "a") {
+          _this2.game.keys.leftKey = true;
+        } else if (e.key === "s") {
+          _this2.game.keys.downKey = true;
+        } else if (e.key === "d") {
+          _this2.game.keys.rightKey = true;
+        }
+      });
+      document.addEventListener("keyup", function (e) {
+        if (e.key === "w") {
+          _this2.game.keys.upKey = false;
+        } else if (e.key === "a") {
+          _this2.game.keys.leftKey = false;
+        } else if (e.key === "s") {
+          _this2.game.keys.downKey = false;
+        } else if (e.key === "d") {
+          _this2.game.keys.rightKey = false;
+        }
+      });
+    }
   }]);
 
   return GameView;
@@ -125,12 +156,15 @@ var MovingObject = /*#__PURE__*/function () {
   function MovingObject(game) {
     _classCallCheck(this, MovingObject);
 
+    this.game = game;
     this.width = 50;
     this.height = 100;
     this.vel = {
-      x: 1,
+      x: 0,
       y: 0
     };
+    this.maxSpeed = 7;
+    this.friction = 0.3;
     this.pos = {
       x: game.DIM_X / 2 - this.width / 2,
       y: game.DIM_Y - this.height - 10
@@ -140,6 +174,32 @@ var MovingObject = /*#__PURE__*/function () {
   _createClass(MovingObject, [{
     key: "update",
     value: function update() {
+      var _this$game$keys = this.game.keys,
+          upKey = _this$game$keys.upKey,
+          downKey = _this$game$keys.downKey,
+          leftKey = _this$game$keys.leftKey,
+          rightKey = _this$game$keys.rightKey; //Handle Horizontal Movement
+
+      if (!leftKey && !rightKey || leftKey && rightKey) {
+        this.vel.x *= this.friction;
+      } //only if left key is pressed and less than max speed
+      else if (leftKey && this.vel.x > -this.maxSpeed) {
+          this.vel.x -= 1;
+        } //only if right key is pressed and less than max speed
+        else if (rightKey && this.vel.x < this.maxSpeed) {
+            this.vel.x += 1;
+          }
+
+      if (upKey) {
+        this.vel.y = -15;
+      }
+
+      this.vel.y += 2;
+    }
+  }, {
+    key: "step",
+    value: function step() {
+      this.update();
       this.pos.x += this.vel.x;
       this.pos.y += this.vel.y;
     }

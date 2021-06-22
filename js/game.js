@@ -4,6 +4,13 @@ export default class Game{
     constructor(){
         this.DIM_X = 1200;
         this.DIM_Y = 600;
+
+        this.keys = {
+            upKey: false,
+            downKey: false,
+            leftKey: false,
+            rightKey: false
+        }
     
         this.mo = new MovingObject(this);
     }
@@ -18,6 +25,6 @@ export default class Game{
     }
 
     step(){
-        this.mo.update();
+        this.mo.step();
     }
 }
