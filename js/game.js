@@ -9,6 +9,15 @@ export default class Game{
     }
 
     draw(ctx){
+        //background
+        ctx.fillStyle = "lightblue";
+        ctx.fillRect(0, 0, 1200, 600);
+
+        //moving object
         this.mo.draw(ctx)
+    }
+
+    step(){
+        this.mo.update();
     }
 }

@@ -33,7 +33,16 @@ var Game = /*#__PURE__*/function () {
   _createClass(Game, [{
     key: "draw",
     value: function draw(ctx) {
+      //background
+      ctx.fillStyle = "lightblue";
+      ctx.fillRect(0, 0, 1200, 600); //moving object
+
       this.mo.draw(ctx);
+    }
+  }, {
+    key: "step",
+    value: function step() {
+      this.mo.update();
     }
   }]);
 
@@ -77,8 +86,16 @@ var GameView = /*#__PURE__*/function () {
   _createClass(GameView, [{
     key: "start",
     value: function start() {
-      this.game.draw(this.ctx);
+      var _this = this;
+
+      // this.bindKeyHandlers();
+      setInterval(function () {
+        _this.game.step(), _this.game.draw(_this.ctx);
+      }, 1000 / 30);
     }
+  }, {
+    key: "bindKeyHandlers",
+    value: function bindKeyHandlers() {}
   }]);
 
   return GameView;
@@ -110,6 +127,10 @@ var MovingObject = /*#__PURE__*/function () {
 
     this.width = 50;
     this.height = 100;
+    this.vel = {
+      x: 1,
+      y: 0
+    };
     this.pos = {
       x: game.DIM_X / 2 - this.width / 2,
       y: game.DIM_Y - this.height - 10
@@ -117,6 +138,12 @@ var MovingObject = /*#__PURE__*/function () {
   }
 
   _createClass(MovingObject, [{
+    key: "update",
+    value: function update() {
+      this.pos.x += this.vel.x;
+      this.pos.y += this.vel.y;
+    }
+  }, {
     key: "draw",
     value: function draw(ctx) {
       ctx.fillStyle = "blue";

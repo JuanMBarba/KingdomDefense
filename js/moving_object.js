@@ -3,10 +3,20 @@ export default class MovingObject{
         this.width = 50;
         this.height = 100;
 
+        this.vel = {
+            x: 1,
+            y: 0
+        }
+
         this.pos ={
             x: game.DIM_X / 2 - this.width / 2 ,
             y: game.DIM_Y - this.height - 10
         }
+    }
+
+    update(){
+        this.pos.x += this.vel.x;
+        this.pos.y += this.vel.y;
     }
 
     draw(ctx){
