@@ -2,6 +2,63 @@
 /******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ({
 
+/***/ "./js/attack_box.js":
+/*!**************************!*\
+  !*** ./js/attack_box.js ***!
+  \**************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ AttackBox)
+/* harmony export */ });
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+var AttackBox = /*#__PURE__*/function () {
+  function AttackBox(x, y, width, height, vel, xRange, yRange) {
+    _classCallCheck(this, AttackBox);
+
+    this.pos = {
+      x: x,
+      y: y
+    };
+    this.range = {
+      x: xRange,
+      y: yRange
+    };
+    this.width = width + Math.abs(xRange);
+    this.height = height + Math.abs(yRange);
+    this.vel = vel;
+  }
+
+  _createClass(AttackBox, [{
+    key: "step",
+    value: function step(x, y, vel) {
+      this.pos.x = x + this.range.x;
+      this.pos.y = y + this.range.y;
+      this.vel = vel;
+    } //Draw for testing only
+
+  }, {
+    key: "draw",
+    value: function draw(ctx) {
+      // console.log(this.width);
+      ctx.fillStyle = "purple";
+      ctx.fillRect(this.pos.x, this.pos.y, this.width, this.height);
+    }
+  }]);
+
+  return AttackBox;
+}();
+
+
+
+/***/ }),
+
 /***/ "./js/border.js":
 /*!**********************!*\
   !*** ./js/border.js ***!
@@ -87,10 +144,13 @@ var Game = /*#__PURE__*/function () {
       rightKey: false,
       attackKey: false
     };
-    this.player = new _player__WEBPACK_IMPORTED_MODULE_1__.default(this);
-    this.monster = new _monster__WEBPACK_IMPORTED_MODULE_2__.default(this);
+    this.timePassed = 0;
+    this.player = new _player__WEBPACK_IMPORTED_MODULE_1__.default(this); //this.monster = new Monster(this);
+
     this.borders = [];
+    this.enemies = [];
     this.populateBorders();
+    this.populateEnemies();
   }
 
   _createClass(Game, [{
@@ -101,25 +161,11 @@ var Game = /*#__PURE__*/function () {
       }
     }
   }, {
-    key: "draw",
-    value: function draw(ctx) {
-      //background
-      ctx.fillStyle = "lightblue";
-      ctx.fillRect(0, 0, 1200, 600);
-      this.handleCollisions(); //moving object
-
-      this.player.draw(ctx);
-      this.monster.draw(ctx); //Borders
-
-      this.borders.forEach(function (border) {
-        border.draw(ctx);
-      }); //draw circle
-      // ctx.beginPath();
-      // ctx.arc(10, 10, 10, 0, 2 * Math.PI);
-      // ctx.strokeStyle = "red";
-      // ctx.stroke();
-      // ctx.fillStyle = "red";
-      // ctx.fill();
+    key: "populateEnemies",
+    value: function populateEnemies() {
+      for (var i = 0; i < 1; i++) {
+        this.enemies.push(new _monster__WEBPACK_IMPORTED_MODULE_2__.default(this));
+      }
     }
   }, {
     key: "handleCollisions",
@@ -130,12 +176,50 @@ var Game = /*#__PURE__*/function () {
       this.borders.forEach(function (border) {
         _this.player.handleCollision(border);
       });
+
+      if (this.player.attacking && this.player.attackFrames < 6) {
+        var toBeDeleted = [];
+        this.enemies.forEach(function (enemy, idx) {
+          if (_this.player.handleAttackCollision(enemy)) {
+            toBeDeleted.push(idx - toBeDeleted.length);
+          }
+        });
+        toBeDeleted.forEach(function (idx) {
+          delete _this.enemies[idx];
+        });
+      }
     }
   }, {
     key: "step",
     value: function step() {
       this.player.step();
-      this.monster.step();
+      this.enemies.forEach(function (enemy) {
+        enemy.step();
+      });
+      this.handleCollisions();
+    }
+  }, {
+    key: "draw",
+    value: function draw(ctx) {
+      //background
+      ctx.fillStyle = "lightblue";
+      ctx.fillStyle = "rgba(30,139,195, 0.6)";
+      ctx.fillRect(0, 0, 1200, 600); //moving object
+
+      this.player.draw(ctx);
+      this.enemies.forEach(function (enemy) {
+        enemy.draw(ctx);
+      }); //Borders
+
+      this.borders.forEach(function (border) {
+        border.draw(ctx);
+      }); //draw circle
+      // ctx.beginPath();
+      // ctx.arc(10, 10, 10, 0, 2 * Math.PI);
+      // ctx.strokeStyle = "red";
+      // ctx.stroke();
+      // ctx.fillStyle = "red";
+      // ctx.fill();
     }
   }]);
 
@@ -284,7 +368,10 @@ var Monster = /*#__PURE__*/function (_MovingObject) {
     _this.maxRange = 30;
     _this.current = 0;
     return _this;
-  }
+  } // on death create death animation sprite to the game object
+  // delete self after hit
+  // but death sprite will play
+
 
   _createClass(Monster, [{
     key: "update",
@@ -375,7 +462,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (/* binding */ Player)
 /* harmony export */ });
 /* harmony import */ var _moving_object__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./moving_object */ "./js/moving_object.js");
-/* harmony import */ var _sprite__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./sprite */ "./js/sprite.js");
+/* harmony import */ var _attack_box__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./attack_box */ "./js/attack_box.js");
+/* harmony import */ var _sprite__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./sprite */ "./js/sprite.js");
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -383,6 +471,10 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _get(target, property, receiver) { if (typeof Reflect !== "undefined" && Reflect.get) { _get = Reflect.get; } else { _get = function _get(target, property, receiver) { var base = _superPropBase(target, property); if (!base) return; var desc = Object.getOwnPropertyDescriptor(base, property); if (desc.get) { return desc.get.call(receiver); } return desc.value; }; } return _get(target, property, receiver || target); }
+
+function _superPropBase(object, property) { while (!Object.prototype.hasOwnProperty.call(object, property)) { object = _getPrototypeOf(object); if (object === null) break; } return object; }
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
 
@@ -401,6 +493,7 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
 
 
 
+
 var Player = /*#__PURE__*/function (_MovingObject) {
   _inherits(Player, _MovingObject);
 
@@ -412,20 +505,31 @@ var Player = /*#__PURE__*/function (_MovingObject) {
     _classCallCheck(this, Player);
 
     _this = _super.call(this, 60, //x
-    game.DIM_Y - 100 - 110, //y
+    game.DIM_Y - 100 - 100, //y
     50, //width
     100, //height
-    "blue", game);
+    "blue", game); //Jump Variables
+
     _this.jumping = false;
-    _this.dJumping = false;
+    _this.dJumping = false; //Sprite + Sprite Start Positions
+
+    _this.sprite = new _sprite__WEBPACK_IMPORTED_MODULE_2__.default();
     _this.facing = "right";
-    _this.motion = "idle";
+    _this.motion = "idle"; //Attack Variables
+
     _this.attackFrames = 0;
-    _this.attacking = false;
+    _this.attacking = false; //Attack Hit Boxes + Variables
+
+    _this.range = {
+      x: 125,
+      y: 100
+    };
+    _this.rightAttackBox = new _attack_box__WEBPACK_IMPORTED_MODULE_1__.default(_this.pos.x - _this.range.x, _this.pos.y, _this.width, _this.height, _this.vel, _this.range.x, -_this.range.y);
+    _this.leftAttackBox = new _attack_box__WEBPACK_IMPORTED_MODULE_1__.default(_this.pos.x, _this.pos.y, _this.width, _this.height, _this.vel, -_this.range.x, -_this.range.y); //Speed Variables
+
     _this.maxMoveSpeed = 10;
     _this.maxFallSpeed = 15;
     _this.friction = 0.3;
-    _this.sprite = new _sprite__WEBPACK_IMPORTED_MODULE_1__.default();
     return _this;
   }
 
@@ -448,9 +552,19 @@ var Player = /*#__PURE__*/function (_MovingObject) {
       this.vel.y = Math.round(this.vel.y);
       if (this.vel.y > 2) this.motion = "fall"; //attack
 
-      this.attack(attackKey); //sprite
+      this.attack(attackKey); //attackBox
+      //sprite
 
       this.sprite.update(this.facing, this.motion);
+    }
+  }, {
+    key: "step",
+    value: function step() {
+      _get(_getPrototypeOf(Player.prototype), "step", this).call(this); //attackBox
+
+
+      this.rightAttackBox.step(this.pos.x - this.range.x, this.pos.y, this.vel);
+      this.leftAttackBox.step(this.pos.x, this.pos.y, this.vel);
     }
   }, {
     key: "attack",
@@ -475,12 +589,14 @@ var Player = /*#__PURE__*/function (_MovingObject) {
         return;
       } //only if left key is pressed and less than max speed
       else if (leftKey && this.vel.x > -this.maxMoveSpeed) {
+          if (this.vel.x > 0) this.vel.x = 0;
           this.vel.x -= 1;
-          this.facing = "left";
+          if (!this.attacking) this.facing = "left";
         } //only if right key is pressed and less than max speed
         else if (rightKey && this.vel.x < this.maxMoveSpeed) {
+            if (this.vel.x < 0) this.vel.x = 0;
             this.vel.x += 1;
-            this.facing = "right";
+            if (!this.attacking) this.facing = "right";
           }
 
       if (this.motion != 'jump') this.motion = "run";
@@ -525,11 +641,37 @@ var Player = /*#__PURE__*/function (_MovingObject) {
       }
     }
   }, {
+    key: "handleAttackCollision",
+    value: function handleAttackCollision(enemy) {
+      var _enemy$pos = enemy.pos,
+          enemyX = _enemy$pos.x,
+          enemyY = _enemy$pos.y; // let enemyY = enemy.pos.y;
+
+      var attack = this.facing === "left" ? this.leftAttackBox : this.rightAttackBox;
+      var _attack$pos = attack.pos,
+          x = _attack$pos.x,
+          y = _attack$pos.y;
+
+      if (x >= enemyX + enemy.width) {
+        return false;
+      } else if (x + attack.width <= enemyX) {
+        return false;
+      } else if (y > enemyY + enemy.height) {
+        return false;
+      } else if (y + attack.height <= enemyY) {
+        return false;
+      } else {
+        return true;
+      }
+    }
+  }, {
     key: "draw",
     value: function draw(ctx) {
       ctx.fillStyle = "blue"; // console.log(this.pos.x);
-
-      ctx.fillRect(this.pos.x, this.pos.y, this.width, this.height); //Sprites WIP
+      // ctx.fillRect(this.pos.x, this.pos.y, this.width, this.height);
+      //draw attack box
+      // this.leftAttackBox.draw(ctx);
+      //Sprites WIP
 
       this.sprite.draw(ctx, this.pos.x, this.pos.y, this.facing, this.motion);
     }

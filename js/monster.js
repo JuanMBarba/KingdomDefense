@@ -16,7 +16,9 @@ export default class Monster extends MovingObject{
         this.maxRange = 30;
         this.current = 0;
     }
-
+    // on death create death animation sprite to the game object
+    // delete self after hit
+    // but death sprite will play
     update(){
         if( Math.abs(this.current) >= this.maxRange){
             this.vel.y *= -1;
