@@ -1,6 +1,6 @@
 import MovingObject from "./moving_object";
 import AttackBox from "./attack_box";
-import Sprite from "./sprite";
+import PlayerSprite from "./player_sprite";
 
 export default class Player extends MovingObject{
     constructor(game){
@@ -16,7 +16,7 @@ export default class Player extends MovingObject{
         this.jumping = false;
         this.dJumping = false;
         //Sprite + Sprite Start Positions
-        this.sprite = new Sprite();
+        this.sprite = new PlayerSprite();
         this.facing = "right";
         this.motion = "idle";
         //Attack Variables

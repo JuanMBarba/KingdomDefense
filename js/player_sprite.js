@@ -1,4 +1,4 @@
-export default class Sprite{
+export default class PlayerSprite{
     constructor(){
         this.spriteWidth = 1280;
         this.spriteHeight = 110;
@@ -16,8 +16,8 @@ export default class Sprite{
         //this.speed = 12;
 
         this.setupSprites();
-        this.sprite = new Image();
-        this.sprite.src = "./assets/RightIdle.png";
+        // this.sprite = new Image();
+        // this.sprite.src = "./assets/player/RightIdle.png";
     }
 
     setupSprites(){
@@ -37,16 +37,16 @@ export default class Sprite{
                 attack: new Image()
             }
         }
-        this.sprites.right.idle.src = "./assets/RightIdle.png";
-        this.sprites.left.idle.src = "./assets/LeftIdle.png"
-        this.sprites.right.run.src = "./assets/RightRun.png";
-        this.sprites.left.run.src = "./assets/LeftRun.png"
-        this.sprites.right.jump.src = "./assets/RightJump.png";
-        this.sprites.left.jump.src = "./assets/LeftJump.png"
-        this.sprites.right.fall.src = "./assets/RightFall.png";
-        this.sprites.left.fall.src = "./assets/LeftFall.png"
-        this.sprites.right.attack.src = "./assets/RightAttack3.png";
-        this.sprites.left.attack.src = "./assets/LeftAttack3.png"
+        this.sprites.right.idle.src = "./assets/player/RightIdle.png";
+        this.sprites.left.idle.src = "./assets/player/LeftIdle.png"
+        this.sprites.right.run.src = "./assets/player/RightRun.png";
+        this.sprites.left.run.src = "./assets/player/LeftRun.png"
+        this.sprites.right.jump.src = "./assets/player/RightJump.png";
+        this.sprites.left.jump.src = "./assets/player/LeftJump.png"
+        this.sprites.right.fall.src = "./assets/player/RightFall.png";
+        this.sprites.left.fall.src = "./assets/player/LeftFall.png"
+        this.sprites.right.attack.src = "./assets/player/RightAttack3.png";
+        this.sprites.left.attack.src = "./assets/player/LeftAttack3.png"
     }
 
     updateParams(motion){

@@ -68,7 +68,7 @@ export default class Game{
     draw(ctx) {
         //background
         ctx.fillStyle = "lightblue";
-        ctx.fillStyle = "rgba(30,139,195, 0.6)";
+        //ctx.fillStyle = "rgba(30,139,195, 0.6)";
         ctx.fillRect(0, 0, 1200, 600);
         //moving object
         this.player.draw(ctx);

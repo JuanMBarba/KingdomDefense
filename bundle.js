@@ -202,8 +202,8 @@ var Game = /*#__PURE__*/function () {
     key: "draw",
     value: function draw(ctx) {
       //background
-      ctx.fillStyle = "lightblue";
-      ctx.fillStyle = "rgba(30,139,195, 0.6)";
+      ctx.fillStyle = "lightblue"; //ctx.fillStyle = "rgba(30,139,195, 0.6)";
+
       ctx.fillRect(0, 0, 1200, 600); //moving object
 
       this.player.draw(ctx);
@@ -322,6 +322,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (/* binding */ Monster)
 /* harmony export */ });
 /* harmony import */ var _moving_object__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./moving_object */ "./js/moving_object.js");
+/* harmony import */ var _monster_sprite__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./monster_sprite */ "./js/monster_sprite.js");
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -346,6 +347,7 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
 
 
 
+
 var Monster = /*#__PURE__*/function (_MovingObject) {
   _inherits(Monster, _MovingObject);
 
@@ -367,6 +369,7 @@ var Monster = /*#__PURE__*/function (_MovingObject) {
     _this.maxMoveSpeed = 10;
     _this.maxRange = 30;
     _this.current = 0;
+    _this.sprite = new _monster_sprite__WEBPACK_IMPORTED_MODULE_1__.default();
     return _this;
   } // on death create death animation sprite to the game object
   // delete self after hit
@@ -381,11 +384,75 @@ var Monster = /*#__PURE__*/function (_MovingObject) {
       }
 
       this.current += this.vel.y;
+      this.sprite.update();
+    }
+  }, {
+    key: "draw",
+    value: function draw(ctx) {
+      //super.draw(ctx)
+      this.sprite.draw(ctx, this.pos.x, this.pos.y);
     }
   }]);
 
   return Monster;
 }(_moving_object__WEBPACK_IMPORTED_MODULE_0__.default);
+
+
+
+/***/ }),
+
+/***/ "./js/monster_sprite.js":
+/*!******************************!*\
+  !*** ./js/monster_sprite.js ***!
+  \******************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ MonsterSprite)
+/* harmony export */ });
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+var MonsterSprite = /*#__PURE__*/function () {
+  function MonsterSprite() {
+    _classCallCheck(this, MonsterSprite);
+
+    this.spriteWidth = 768;
+    this.spriteHeight = 112;
+    this.cols = 8;
+    this.rows = 1;
+    this.width = this.spriteWidth / this.cols;
+    this.height = this.spriteHeight / this.rows;
+    this.curFrame = 0;
+    this.frameCount = 8;
+    this.srcX = 0;
+    this.srcY = 0;
+    this.sprite = new Image();
+    this.sprite.src = "./assets/floating_monster/fire-skull.png";
+  }
+
+  _createClass(MonsterSprite, [{
+    key: "setupSprites",
+    value: function setupSprites() {}
+  }, {
+    key: "update",
+    value: function update() {
+      this.curFrame = (this.curFrame + .25) % this.frameCount;
+      this.srcX = Math.floor(this.curFrame) * this.width;
+    }
+  }, {
+    key: "draw",
+    value: function draw(ctx, x, y) {
+      ctx.drawImage(this.sprite, this.srcX, this.srcY, this.width, this.height, x - 5, y - 15, this.width * 2 / 3, this.height * 2 / 3);
+    }
+  }]);
+
+  return MonsterSprite;
+}();
 
 
 
@@ -463,7 +530,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _moving_object__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./moving_object */ "./js/moving_object.js");
 /* harmony import */ var _attack_box__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./attack_box */ "./js/attack_box.js");
-/* harmony import */ var _sprite__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./sprite */ "./js/sprite.js");
+/* harmony import */ var _player_sprite__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./player_sprite */ "./js/player_sprite.js");
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -513,7 +580,7 @@ var Player = /*#__PURE__*/function (_MovingObject) {
     _this.jumping = false;
     _this.dJumping = false; //Sprite + Sprite Start Positions
 
-    _this.sprite = new _sprite__WEBPACK_IMPORTED_MODULE_2__.default();
+    _this.sprite = new _player_sprite__WEBPACK_IMPORTED_MODULE_2__.default();
     _this.facing = "right";
     _this.motion = "idle"; //Attack Variables
 
@@ -684,15 +751,15 @@ var Player = /*#__PURE__*/function (_MovingObject) {
 
 /***/ }),
 
-/***/ "./js/sprite.js":
-/*!**********************!*\
-  !*** ./js/sprite.js ***!
-  \**********************/
+/***/ "./js/player_sprite.js":
+/*!*****************************!*\
+  !*** ./js/player_sprite.js ***!
+  \*****************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (/* binding */ Sprite)
+/* harmony export */   "default": () => (/* binding */ PlayerSprite)
 /* harmony export */ });
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -700,9 +767,9 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-var Sprite = /*#__PURE__*/function () {
-  function Sprite() {
-    _classCallCheck(this, Sprite);
+var PlayerSprite = /*#__PURE__*/function () {
+  function PlayerSprite() {
+    _classCallCheck(this, PlayerSprite);
 
     this.spriteWidth = 1280;
     this.spriteHeight = 110;
@@ -715,12 +782,11 @@ var Sprite = /*#__PURE__*/function () {
     this.srcX = 0;
     this.srcY = 0; //this.speed = 12;
 
-    this.setupSprites();
-    this.sprite = new Image();
-    this.sprite.src = "./assets/RightIdle.png";
+    this.setupSprites(); // this.sprite = new Image();
+    // this.sprite.src = "./assets/player/RightIdle.png";
   }
 
-  _createClass(Sprite, [{
+  _createClass(PlayerSprite, [{
     key: "setupSprites",
     value: function setupSprites() {
       this.sprites = {
@@ -739,16 +805,16 @@ var Sprite = /*#__PURE__*/function () {
           attack: new Image()
         }
       };
-      this.sprites.right.idle.src = "./assets/RightIdle.png";
-      this.sprites.left.idle.src = "./assets/LeftIdle.png";
-      this.sprites.right.run.src = "./assets/RightRun.png";
-      this.sprites.left.run.src = "./assets/LeftRun.png";
-      this.sprites.right.jump.src = "./assets/RightJump.png";
-      this.sprites.left.jump.src = "./assets/LeftJump.png";
-      this.sprites.right.fall.src = "./assets/RightFall.png";
-      this.sprites.left.fall.src = "./assets/LeftFall.png";
-      this.sprites.right.attack.src = "./assets/RightAttack3.png";
-      this.sprites.left.attack.src = "./assets/LeftAttack3.png";
+      this.sprites.right.idle.src = "./assets/player/RightIdle.png";
+      this.sprites.left.idle.src = "./assets/player/LeftIdle.png";
+      this.sprites.right.run.src = "./assets/player/RightRun.png";
+      this.sprites.left.run.src = "./assets/player/LeftRun.png";
+      this.sprites.right.jump.src = "./assets/player/RightJump.png";
+      this.sprites.left.jump.src = "./assets/player/LeftJump.png";
+      this.sprites.right.fall.src = "./assets/player/RightFall.png";
+      this.sprites.left.fall.src = "./assets/player/LeftFall.png";
+      this.sprites.right.attack.src = "./assets/player/RightAttack3.png";
+      this.sprites.left.attack.src = "./assets/player/LeftAttack3.png";
     }
   }, {
     key: "updateParams",
@@ -814,7 +880,7 @@ var Sprite = /*#__PURE__*/function () {
     }
   }]);
 
-  return Sprite;
+  return PlayerSprite;
 }();
 
 
