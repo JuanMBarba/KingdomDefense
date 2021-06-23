@@ -1,21 +1,21 @@
 export default class MonsterSprite{
     constructor(){
-        this.spriteWidth = 768;
-        this.spriteHeight = 112;
+        this.spriteWidth = 168;
+        this.spriteHeight = 168;
 
-        this.cols = 8;
-        this.rows = 1;
+        this.cols = 4;
+        this.rows = 4;
         this.width = this.spriteWidth / this.cols;
         this.height = this.spriteHeight / this.rows;
 
         this.curFrame = 0;
-        this.frameCount = 8;
+        this.frameCount = 16;
 
         this.srcX = 0;
         this.srcY = 0;
 
         this.sprite = new Image();
-        this.sprite.src ="./assets/floating_monster/fire-skull.png"
+        this.sprite.src ="./assets/floating_monster/fire-skull-c.png"
     }
 
     setupSprites(){
@@ -23,8 +23,9 @@ export default class MonsterSprite{
     }
 
     update(){
-        this.curFrame = (this.curFrame + .25) % this.frameCount;
-        this.srcX = Math.floor(this.curFrame) * this.width;
+        this.curFrame = (this.curFrame + .5) % this.frameCount;
+        this.srcX = (this.cols - Math.floor(this.curFrame % this.cols) - 1) * this.width;
+        this.srcY = Math.floor(this.curFrame / this.rows) * this.height;
     }
 
     draw(ctx, x, y){
@@ -32,8 +33,8 @@ export default class MonsterSprite{
             this.sprite,
             this.srcX, this.srcY,
             this.width, this.height,
-            x- 5, y - 15,
-            this.width*2/3, this.height*2/3
+            x - 20, y - 15,
+            this.width * 2, this.height * 2 
         )
     }
 

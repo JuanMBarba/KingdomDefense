@@ -16,6 +16,8 @@ export default class Game{
             attackKey: false
         }
         this.timePassed = 0;
+        this.background = new Image();
+        this.background.src = "./assets/background/game-background.jpeg";
         this.player = new Player(this);
         //this.monster = new Monster(this);
         this.borders = [];
@@ -67,9 +69,11 @@ export default class Game{
 
     draw(ctx) {
         //background
-        ctx.fillStyle = "lightblue";
-        //ctx.fillStyle = "rgba(30,139,195, 0.6)";
+        //ctx.fillStyle = "lightblue";
+        ctx.fillStyle = "rgba(30,139,195, 0.6)";
         ctx.fillRect(0, 0, 1200, 600);
+        
+        ctx.drawImage(this.background, 0, 0, 1200, 610)
         //moving object
         this.player.draw(ctx);
         this.enemies.forEach(enemy => {
@@ -78,7 +82,7 @@ export default class Game{
         //Borders
         this.borders.forEach(border => {
 
-            border.draw(ctx)
+            //border.draw(ctx)
         });
 
         //draw circle

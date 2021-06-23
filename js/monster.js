@@ -30,7 +30,7 @@ export default class Monster extends MovingObject{
     }
 
     draw(ctx){
-        //super.draw(ctx)
+        // super.draw(ctx)
         this.sprite.draw(ctx, this.pos.x, this.pos.y);
     }
 }

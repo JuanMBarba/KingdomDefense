@@ -145,6 +145,8 @@ var Game = /*#__PURE__*/function () {
       attackKey: false
     };
     this.timePassed = 0;
+    this.background = new Image();
+    this.background.src = "./assets/background/game-background.jpeg";
     this.player = new _player__WEBPACK_IMPORTED_MODULE_1__.default(this); //this.monster = new Monster(this);
 
     this.borders = [];
@@ -202,17 +204,17 @@ var Game = /*#__PURE__*/function () {
     key: "draw",
     value: function draw(ctx) {
       //background
-      ctx.fillStyle = "lightblue"; //ctx.fillStyle = "rgba(30,139,195, 0.6)";
-
-      ctx.fillRect(0, 0, 1200, 600); //moving object
+      //ctx.fillStyle = "lightblue";
+      ctx.fillStyle = "rgba(30,139,195, 0.6)";
+      ctx.fillRect(0, 0, 1200, 600);
+      ctx.drawImage(this.background, 0, 0, 1200, 610); //moving object
 
       this.player.draw(ctx);
       this.enemies.forEach(function (enemy) {
         enemy.draw(ctx);
       }); //Borders
 
-      this.borders.forEach(function (border) {
-        border.draw(ctx);
+      this.borders.forEach(function (border) {//border.draw(ctx)
       }); //draw circle
       // ctx.beginPath();
       // ctx.arc(10, 10, 10, 0, 2 * Math.PI);
@@ -389,7 +391,7 @@ var Monster = /*#__PURE__*/function (_MovingObject) {
   }, {
     key: "draw",
     value: function draw(ctx) {
-      //super.draw(ctx)
+      // super.draw(ctx)
       this.sprite.draw(ctx, this.pos.x, this.pos.y);
     }
   }]);
@@ -421,18 +423,18 @@ var MonsterSprite = /*#__PURE__*/function () {
   function MonsterSprite() {
     _classCallCheck(this, MonsterSprite);
 
-    this.spriteWidth = 768;
-    this.spriteHeight = 112;
-    this.cols = 8;
-    this.rows = 1;
+    this.spriteWidth = 168;
+    this.spriteHeight = 168;
+    this.cols = 4;
+    this.rows = 4;
     this.width = this.spriteWidth / this.cols;
     this.height = this.spriteHeight / this.rows;
     this.curFrame = 0;
-    this.frameCount = 8;
+    this.frameCount = 16;
     this.srcX = 0;
     this.srcY = 0;
     this.sprite = new Image();
-    this.sprite.src = "./assets/floating_monster/fire-skull.png";
+    this.sprite.src = "./assets/floating_monster/fire-skull-c.png";
   }
 
   _createClass(MonsterSprite, [{
@@ -441,13 +443,14 @@ var MonsterSprite = /*#__PURE__*/function () {
   }, {
     key: "update",
     value: function update() {
-      this.curFrame = (this.curFrame + .25) % this.frameCount;
-      this.srcX = Math.floor(this.curFrame) * this.width;
+      this.curFrame = (this.curFrame + .5) % this.frameCount;
+      this.srcX = (this.cols - Math.floor(this.curFrame % this.cols) - 1) * this.width;
+      this.srcY = Math.floor(this.curFrame / this.rows) * this.height;
     }
   }, {
     key: "draw",
     value: function draw(ctx, x, y) {
-      ctx.drawImage(this.sprite, this.srcX, this.srcY, this.width, this.height, x - 5, y - 15, this.width * 2 / 3, this.height * 2 / 3);
+      ctx.drawImage(this.sprite, this.srcX, this.srcY, this.width, this.height, x - 20, y - 15, this.width * 2, this.height * 2);
     }
   }]);
 
