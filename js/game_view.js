@@ -28,6 +28,9 @@ export default class GameView{
             else if(e.key === "d"){
                 this.game.keys.rightKey = true;
             }
+            else if(e.key === "p"){
+                this.game.keys.attackKey = true;
+            }
         })
 
         document.addEventListener("keyup", (e) => {
@@ -42,6 +45,9 @@ export default class GameView{
             }
             else if(e.key === "d"){
                 this.game.keys.rightKey = false;
+            }
+            else if (e.key === "p") {
+                this.game.keys.attackKey = false;
             }
         })
     }

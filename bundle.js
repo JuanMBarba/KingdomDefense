@@ -61,12 +61,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _moving_object__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./moving_object */ "./js/moving_object.js");
 /* harmony import */ var _player__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./player */ "./js/player.js");
-/* harmony import */ var _border__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./border */ "./js/border.js");
+/* harmony import */ var _monster__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./monster */ "./js/monster.js");
+/* harmony import */ var _border__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./border */ "./js/border.js");
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
 
 
 
@@ -82,9 +84,11 @@ var Game = /*#__PURE__*/function () {
       upKey: false,
       downKey: false,
       leftKey: false,
-      rightKey: false
+      rightKey: false,
+      attackKey: false
     };
     this.player = new _player__WEBPACK_IMPORTED_MODULE_1__.default(this);
+    this.monster = new _monster__WEBPACK_IMPORTED_MODULE_2__.default(this);
     this.borders = [];
     this.populateBorders();
   }
@@ -93,7 +97,7 @@ var Game = /*#__PURE__*/function () {
     key: "populateBorders",
     value: function populateBorders() {
       for (var i = 0; i < 12; i++) {
-        this.borders.push(new _border__WEBPACK_IMPORTED_MODULE_2__.default(0 + 100 * i, this.DIM_Y - 100, 100, 100, 1));
+        this.borders.push(new _border__WEBPACK_IMPORTED_MODULE_3__.default(0 + 100 * i, this.DIM_Y - 100, 100, 100, 1));
       }
     }
   }, {
@@ -104,7 +108,8 @@ var Game = /*#__PURE__*/function () {
       ctx.fillRect(0, 0, 1200, 600);
       this.handleCollisions(); //moving object
 
-      this.player.draw(ctx); //Borders
+      this.player.draw(ctx);
+      this.monster.draw(ctx); //Borders
 
       this.borders.forEach(function (border) {
         border.draw(ctx);
@@ -130,6 +135,7 @@ var Game = /*#__PURE__*/function () {
     key: "step",
     value: function step() {
       this.player.step();
+      this.monster.step();
     }
   }]);
 
@@ -194,6 +200,8 @@ var GameView = /*#__PURE__*/function () {
           _this2.game.keys.downKey = true;
         } else if (e.key === "d") {
           _this2.game.keys.rightKey = true;
+        } else if (e.key === "p") {
+          _this2.game.keys.attackKey = true;
         }
       });
       document.addEventListener("keyup", function (e) {
@@ -205,6 +213,8 @@ var GameView = /*#__PURE__*/function () {
           _this2.game.keys.downKey = false;
         } else if (e.key === "d") {
           _this2.game.keys.rightKey = false;
+        } else if (e.key === "p") {
+          _this2.game.keys.attackKey = false;
         }
       });
     }
@@ -212,6 +222,83 @@ var GameView = /*#__PURE__*/function () {
 
   return GameView;
 }();
+
+
+
+/***/ }),
+
+/***/ "./js/monster.js":
+/*!***********************!*\
+  !*** ./js/monster.js ***!
+  \***********************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ Monster)
+/* harmony export */ });
+/* harmony import */ var _moving_object__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./moving_object */ "./js/moving_object.js");
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+
+
+var Monster = /*#__PURE__*/function (_MovingObject) {
+  _inherits(Monster, _MovingObject);
+
+  var _super = _createSuper(Monster);
+
+  function Monster(game) {
+    var _this;
+
+    _classCallCheck(this, Monster);
+
+    _this = _super.call(this, game.DIM_X - 60, //x
+    game.DIM_Y - 100 - 110, //y
+    50, //width
+    50, //height
+    "red", //color
+    game);
+    _this.vel.x = -5;
+    _this.vel.y = -3;
+    _this.maxMoveSpeed = 10;
+    _this.maxRange = 30;
+    _this.current = 0;
+    return _this;
+  }
+
+  _createClass(Monster, [{
+    key: "update",
+    value: function update() {
+      if (Math.abs(this.current) >= this.maxRange) {
+        this.vel.y *= -1;
+      }
+
+      this.current += this.vel.y;
+    }
+  }]);
+
+  return Monster;
+}(_moving_object__WEBPACK_IMPORTED_MODULE_0__.default);
 
 
 
@@ -234,7 +321,7 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
 var MovingObject = /*#__PURE__*/function () {
-  function MovingObject(x, y, width, height, game) {
+  function MovingObject(x, y, width, height, color, game) {
     _classCallCheck(this, MovingObject);
 
     this.game = game;
@@ -244,6 +331,7 @@ var MovingObject = /*#__PURE__*/function () {
       x: 0,
       y: 0
     };
+    this.color = color;
     this.pos = {
       x: x,
       y: y
@@ -263,7 +351,7 @@ var MovingObject = /*#__PURE__*/function () {
   }, {
     key: "draw",
     value: function draw(ctx) {
-      ctx.fillStyle = "blue"; // console.log(this.pos.x);
+      ctx.fillStyle = this.color; // console.log(this.pos.x);
 
       ctx.fillRect(this.pos.x, this.pos.y, this.width, this.height);
     }
@@ -323,12 +411,17 @@ var Player = /*#__PURE__*/function (_MovingObject) {
 
     _classCallCheck(this, Player);
 
-    _this = _super.call(this, game.DIM_X / 2 - 50 / 2, //x
+    _this = _super.call(this, 60, //x
     game.DIM_Y - 100 - 110, //y
     50, //width
     100, //height
-    game);
+    "blue", game);
     _this.jumping = false;
+    _this.dJumping = false;
+    _this.facing = "right";
+    _this.motion = "idle";
+    _this.attackFrames = 0;
+    _this.attacking = false;
     _this.maxMoveSpeed = 10;
     _this.maxFallSpeed = 15;
     _this.friction = 0.3;
@@ -342,7 +435,8 @@ var Player = /*#__PURE__*/function (_MovingObject) {
       var _this$game$keys = this.game.keys,
           upKey = _this$game$keys.upKey,
           leftKey = _this$game$keys.leftKey,
-          rightKey = _this$game$keys.rightKey; //downKey not used
+          rightKey = _this$game$keys.rightKey,
+          attackKey = _this$game$keys.attackKey; //downKey not used
       //Handle Horizontal Movement
 
       this.walk(leftKey, rightKey); //jump
@@ -352,27 +446,58 @@ var Player = /*#__PURE__*/function (_MovingObject) {
       this.vel.y <= this.maxFallSpeed ? this.vel.y += 2 : "";
       this.vel.x = Math.round(this.vel.x);
       this.vel.y = Math.round(this.vel.y);
-      this.sprite.update();
+      if (this.vel.y > 2) this.motion = "fall"; //attack
+
+      this.attack(attackKey); //sprite
+
+      this.sprite.update(this.facing, this.motion);
+    }
+  }, {
+    key: "attack",
+    value: function attack(attackKey) {
+      this.attackFrames != 0 ? this.attackFrames-- : this.attacking = false;
+
+      if (attackKey && !this.attacking) {
+        this.attacking = true;
+        this.attackFrames = 12;
+      }
+
+      if (this.attacking) {
+        this.motion = "attack";
+      }
     }
   }, {
     key: "walk",
     value: function walk(leftKey, rightKey) {
       if (!leftKey && !rightKey || leftKey && rightKey) {
         this.vel.x *= this.friction;
+        if (this.motion !== "jump") this.motion = "idle";
+        return;
       } //only if left key is pressed and less than max speed
       else if (leftKey && this.vel.x > -this.maxMoveSpeed) {
           this.vel.x -= 1;
+          this.facing = "left";
         } //only if right key is pressed and less than max speed
         else if (rightKey && this.vel.x < this.maxMoveSpeed) {
             this.vel.x += 1;
+            this.facing = "right";
           }
+
+      if (this.motion != 'jump') this.motion = "run";
     }
   }, {
     key: "jump",
     value: function jump(upKey) {
       if (upKey && !this.jumping) {
-        this.vel.y = -15;
+        this.vel.y = -25;
         this.jumping = true;
+        this.motion = "jump";
+      } else if (upKey && !this.dJumping && this.letgo) {
+        this.vel.y = -25;
+        this.motion = "jump";
+        this.dJumping = true;
+      } else if (!upKey) {
+        this.letgo = true;
       }
     }
   }, {
@@ -389,7 +514,14 @@ var Player = /*#__PURE__*/function (_MovingObject) {
       if (this.pos.y + this.height >= other.y) {
         this.pos.y = other.y - this.height;
         this.vel.y = 0;
+
+        if (this.jumping) {
+          this.motion = "idle";
+        }
+
         this.jumping = false;
+        this.dJumping = false;
+        this.letgo = false;
       }
     }
   }, {
@@ -398,7 +530,8 @@ var Player = /*#__PURE__*/function (_MovingObject) {
       ctx.fillStyle = "blue"; // console.log(this.pos.x);
 
       ctx.fillRect(this.pos.x, this.pos.y, this.width, this.height); //Sprites WIP
-      //this.sprite.draw(ctx, this.pos.x, this.pos.y)
+
+      this.sprite.draw(ctx, this.pos.x, this.pos.y, this.facing, this.motion);
     }
   }]);
 
@@ -440,20 +573,102 @@ var Sprite = /*#__PURE__*/function () {
     this.srcX = 0;
     this.srcY = 0; //this.speed = 12;
 
+    this.setupSprites();
     this.sprite = new Image();
-    this.sprite.src = "./assets/Idle.png";
+    this.sprite.src = "./assets/RightIdle.png";
   }
 
   _createClass(Sprite, [{
+    key: "setupSprites",
+    value: function setupSprites() {
+      this.sprites = {
+        right: {
+          idle: new Image(),
+          run: new Image(),
+          jump: new Image(),
+          fall: new Image(),
+          attack: new Image()
+        },
+        left: {
+          idle: new Image(),
+          run: new Image(),
+          jump: new Image(),
+          fall: new Image(),
+          attack: new Image()
+        }
+      };
+      this.sprites.right.idle.src = "./assets/RightIdle.png";
+      this.sprites.left.idle.src = "./assets/LeftIdle.png";
+      this.sprites.right.run.src = "./assets/RightRun.png";
+      this.sprites.left.run.src = "./assets/LeftRun.png";
+      this.sprites.right.jump.src = "./assets/RightJump.png";
+      this.sprites.left.jump.src = "./assets/LeftJump.png";
+      this.sprites.right.fall.src = "./assets/RightFall.png";
+      this.sprites.left.fall.src = "./assets/LeftFall.png";
+      this.sprites.right.attack.src = "./assets/RightAttack3.png";
+      this.sprites.left.attack.src = "./assets/LeftAttack3.png";
+    }
+  }, {
+    key: "updateParams",
+    value: function updateParams(motion) {
+      if (motion === "attack") {
+        this.spriteWidth = 640;
+        this.cols = 4;
+        this.rows = 1;
+        this.width = this.spriteWidth / this.cols;
+        this.height = this.spriteHeight / this.rows;
+
+        if (this.lastMotion != "attack") {
+          this.curFrame = 0;
+        }
+
+        this.curFrame = this.curFrame;
+        this.frameCount = 4;
+        this.srcX = 0;
+        this.srcY = 0;
+      } else if (motion === "jump" || motion === "fall") {
+        this.spriteWidth = 320;
+        this.cols = 2;
+        this.rows = 1;
+        this.width = this.spriteWidth / this.cols;
+        this.height = this.spriteHeight / this.rows;
+        this.curFrame = this.curFrame > 2 ? 0 : this.curFrame;
+        this.frameCount = 2;
+        this.srcX = 0;
+        this.srcY = 0;
+      } else {
+        this.spriteWidth = 1280;
+        this.cols = 8;
+        this.rows = 1;
+        this.width = this.spriteWidth / this.cols;
+        this.height = this.spriteHeight / this.rows;
+        this.curFrame = this.curFrame;
+        this.frameCount = 8;
+        this.srcX = 0;
+        this.srcY = 0;
+      }
+    }
+  }, {
     key: "update",
-    value: function update() {
+    value: function update(facing, motion) {
+      this.updateParams(motion);
+      this.lastMotion = motion;
       this.curFrame = (this.curFrame + .25) % this.frameCount;
-      this.srcX = Math.floor(this.curFrame) * this.width;
+
+      if (facing == "right") {
+        this.srcX = Math.floor(this.curFrame) * this.width;
+      } else {
+        this.srcX = (this.frameCount - Math.floor(this.curFrame) - 1) * this.width;
+      }
     }
   }, {
     key: "draw",
-    value: function draw(ctx, x, y) {
-      ctx.drawImage(this.sprite, this.srcX, this.srcY, this.width, this.height, x, y, this.width, this.height);
+    value: function draw(ctx, x, y, facing, motion) {
+      // ctx.save();
+      // ctx.scale(-1, 1);
+      var sprite = this.sprites[facing][motion];
+      ctx.drawImage(sprite, this.srcX, this.srcY, this.width, this.height, x - 135, y - 110, this.width * 2, this.height * 2); // ctx.restore()
+      // requestAnimationFrame(draw);
     }
   }]);
 

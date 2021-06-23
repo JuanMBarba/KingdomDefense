@@ -1,5 +1,6 @@
 import MovingObject from "./moving_object";
 import Player from "./player";
+import Monster from "./monster";
 import Border from "./border";
 
 export default class Game{
@@ -11,9 +12,11 @@ export default class Game{
             upKey: false,
             downKey: false,
             leftKey: false,
-            rightKey: false
+            rightKey: false,
+            attackKey: false
         }
         this.player = new Player(this);
+        this.monster = new Monster(this);
         this.borders = [];
         this.populateBorders();
     }
@@ -32,6 +35,7 @@ export default class Game{
         this.handleCollisions();
         //moving object
         this.player.draw(ctx);
+        this.monster.draw(ctx);
         //Borders
         this.borders.forEach( border => {
 
@@ -57,5 +61,6 @@ export default class Game{
 
     step(){
         this.player.step(); 
+        this.monster.step();
     }
 }
