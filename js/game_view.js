@@ -11,7 +11,7 @@ export default class GameView{
 
     start(){
         this.bindKeyHandlers();
-        setInterval(() => { this.game.step(), this.game.draw(this.ctx);}, 1000/30)
+        this.gameLoop = setInterval(() => { this.game.step(), this.game.draw(this.ctx);}, 1000/30)
     }
 
     bindKeyHandlers() {

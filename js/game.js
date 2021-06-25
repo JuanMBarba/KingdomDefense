@@ -25,12 +25,14 @@ export default class Game{
         this.player = new Player(this);
         //this.monster = new Monster(this);
         this.borders = [];
-
+        //Enemy Vars
         this.enemies = [];
         this.populateBorders();
-        this.spawnAmount = 2;
+        this.spawnAmount = 1;
         this.populateEnemies(this.spawnAmount);
         this.totalKills = 0;
+        //Town Vars
+        this.townDestruction = 0;
     }
 
     populateBorders(){
@@ -60,10 +62,12 @@ export default class Game{
                 }
             });
             toBeDeleted.forEach(idx => {
-                delete this.enemies[idx];
+                this.enemies.splice(idx, 1);
+                this.totalKills++
             });
         }
         
+        //Handle Despawn
     }
 
     step(){
@@ -86,10 +90,25 @@ export default class Game{
             this.populateEnemies(this.spawnAmount);
             this.lastSpawnTime = totalSeconds;
         }
-        if (totalSeconds === 30){
+        if (totalSeconds === 15){
             // console.log(this.spawnInterval);
-            this.spawnInterval = 1;
+            this.spawnInterval = 2;
+            // this.spawnAmount = 2;
+        }
+        if (totalSeconds === 30) {
+            // console.log(this.spawnInterval);
+            // this.spawnInterval = 1;
             this.spawnAmount = 2;
+        }
+
+        if(totalSeconds === 45){
+            this.spawnInterval = 1;
+        }
+
+        if (totalSeconds === 60) {
+            // console.log(this.spawnInterval);
+            // this.spawnInterval = 1;
+            this.spawnAmount = 3;
         }
         // if (totalSeconds === 15){
         //     this.spawnInterval = 1;
@@ -115,7 +134,7 @@ export default class Game{
         ctx.strokeText(`Time : ${this.minutes}:${this.seconds<10?"0":""}${this.seconds}`, 10, 50);
 
         //Diplay Kills
-        ctx.strokeText(`Kills : ${this.totalKills}`, 10, 100);
+        ctx.strokeText(`Kills  : ${this.totalKills}`, 10, 100);
         //Borders
         // this.borders.forEach(border => {
 

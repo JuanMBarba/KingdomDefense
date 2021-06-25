@@ -108,12 +108,12 @@ export default class Player extends MovingObject{
 
     jump(upKey) {
         if (upKey && !this.jumping) {
-            this.vel.y = -25;
+            this.vel.y = -26;
             this.jumping=true;
             this.motion = "jump"
         }
         else if(upKey && !this.dJumping && this.letgo){
-            this.vel.y = -25;
+            this.vel.y = -26;
             this.motion = "jump"
             this.dJumping= true
         }

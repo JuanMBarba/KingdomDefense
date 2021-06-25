@@ -153,12 +153,15 @@ var Game = /*#__PURE__*/function () {
     this.background.src = "./assets/background/game-background.jpeg";
     this.player = new _player__WEBPACK_IMPORTED_MODULE_1__.default(this); //this.monster = new Monster(this);
 
-    this.borders = [];
+    this.borders = []; //Enemy Vars
+
     this.enemies = [];
     this.populateBorders();
-    this.spawnAmount = 2;
+    this.spawnAmount = 1;
     this.populateEnemies(this.spawnAmount);
-    this.totalKills = 0;
+    this.totalKills = 0; //Town Vars
+
+    this.townDestruction = 0;
   }
 
   _createClass(Game, [{
@@ -193,9 +196,12 @@ var Game = /*#__PURE__*/function () {
           }
         });
         toBeDeleted.forEach(function (idx) {
-          delete _this.enemies[idx];
+          _this.enemies.splice(idx, 1);
+
+          _this.totalKills++;
         });
-      }
+      } //Handle Despawn
+
     }
   }, {
     key: "step",
@@ -221,10 +227,25 @@ var Game = /*#__PURE__*/function () {
         this.lastSpawnTime = totalSeconds;
       }
 
+      if (totalSeconds === 15) {
+        // console.log(this.spawnInterval);
+        this.spawnInterval = 2; // this.spawnAmount = 2;
+      }
+
       if (totalSeconds === 30) {
         // console.log(this.spawnInterval);
-        this.spawnInterval = 1;
+        // this.spawnInterval = 1;
         this.spawnAmount = 2;
+      }
+
+      if (totalSeconds === 45) {
+        this.spawnInterval = 1;
+      }
+
+      if (totalSeconds === 60) {
+        // console.log(this.spawnInterval);
+        // this.spawnInterval = 1;
+        this.spawnAmount = 3;
       } // if (totalSeconds === 15){
       //     this.spawnInterval = 1;
       // }
@@ -249,7 +270,7 @@ var Game = /*#__PURE__*/function () {
       ctx.lineWidth = 2;
       ctx.strokeText("Time : ".concat(this.minutes, ":").concat(this.seconds < 10 ? "0" : "").concat(this.seconds), 10, 50); //Diplay Kills
 
-      ctx.strokeText("Kills : ".concat(this.totalKills), 10, 100); //Borders
+      ctx.strokeText("Kills  : ".concat(this.totalKills), 10, 100); //Borders
       // this.borders.forEach(border => {
       //     border.draw(ctx)
       // });
@@ -306,7 +327,7 @@ var GameView = /*#__PURE__*/function () {
       var _this = this;
 
       this.bindKeyHandlers();
-      setInterval(function () {
+      this.gameLoop = setInterval(function () {
         _this.game.step(), _this.game.draw(_this.ctx);
       }, 1000 / 30);
     }
@@ -717,11 +738,11 @@ var Player = /*#__PURE__*/function (_MovingObject) {
     key: "jump",
     value: function jump(upKey) {
       if (upKey && !this.jumping) {
-        this.vel.y = -25;
+        this.vel.y = -26;
         this.jumping = true;
         this.motion = "jump";
       } else if (upKey && !this.dJumping && this.letgo) {
-        this.vel.y = -25;
+        this.vel.y = -26;
         this.motion = "jump";
         this.dJumping = true;
       } else if (!upKey) {
