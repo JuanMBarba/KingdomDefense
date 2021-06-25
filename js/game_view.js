@@ -6,12 +6,13 @@ export default class GameView{
         this.ctx = this.canvas.getContext("2d");
         this.canvas.width = 1200;
         this.canvas.height = 600;
-        this.game = new Game();
+        this.game = new Game(this);
     }
 
     start(){
+        this.game = new Game(this);
         this.bindKeyHandlers();
-        setInterval(() => { this.game.step(), this.game.draw(this.ctx);}, 1000/30)
+        this.gameLoop = setInterval(() => { this.game.step(), this.game.draw(this.ctx);}, 1000/30)
     }
 
     bindKeyHandlers() {
@@ -28,6 +29,9 @@ export default class GameView{
             else if(e.key === "d"){
                 this.game.keys.rightKey = true;
             }
+            else if(e.key === "p"){
+                this.game.keys.attackKey = true;
+            }
         })
 
         document.addEventListener("keyup", (e) => {
@@ -42,6 +46,9 @@ export default class GameView{
             }
             else if(e.key === "d"){
                 this.game.keys.rightKey = false;
+            }
+            else if (e.key === "p") {
+                this.game.keys.attackKey = false;
             }
         })
     }

@@ -1,5 +1,5 @@
 export default class MovingObject{
-    constructor(x, y, width, height, game){
+    constructor(x, y, width, height, color, game){
         this.game = game
         this.width = width;
         this.height = height;
@@ -7,6 +7,7 @@ export default class MovingObject{
             x: 0,
             y: 0
         }
+        this.color = color
         this.pos ={
             x: x,
             y: y
@@ -24,7 +25,7 @@ export default class MovingObject{
     }
 
     draw(ctx){
-        ctx.fillStyle = "blue"
+        ctx.fillStyle = this.color;
         // console.log(this.pos.x);
         ctx.fillRect(this.pos.x, this.pos.y, this.width, this.height);
     }
