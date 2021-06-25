@@ -143,8 +143,12 @@ var Game = /*#__PURE__*/function () {
       leftKey: false,
       rightKey: false,
       attackKey: false
-    };
+    }; //Time Vars
+
     this.timePassed = 0;
+    this.lastSpawnTime = 0;
+    this.spawnInterval = 3; //Background
+
     this.background = new Image();
     this.background.src = "./assets/background/game-background.jpeg";
     this.player = new _player__WEBPACK_IMPORTED_MODULE_1__.default(this); //this.monster = new Monster(this);
@@ -152,7 +156,9 @@ var Game = /*#__PURE__*/function () {
     this.borders = [];
     this.enemies = [];
     this.populateBorders();
-    this.populateEnemies();
+    this.spawnAmount = 2;
+    this.populateEnemies(this.spawnAmount);
+    this.totalKills = 0;
   }
 
   _createClass(Game, [{
@@ -164,8 +170,8 @@ var Game = /*#__PURE__*/function () {
     }
   }, {
     key: "populateEnemies",
-    value: function populateEnemies() {
-      for (var i = 0; i < 1; i++) {
+    value: function populateEnemies(amount) {
+      for (var i = 0; i < amount; i++) {
         this.enemies.push(new _monster__WEBPACK_IMPORTED_MODULE_2__.default(this));
       }
     }
@@ -199,6 +205,30 @@ var Game = /*#__PURE__*/function () {
         enemy.step();
       });
       this.handleCollisions();
+      this.timePassed++;
+      this.timeActions();
+    }
+  }, {
+    key: "timeActions",
+    value: function timeActions() {
+      var totalSeconds = Math.floor(this.timePassed / 30);
+      this.seconds = Math.floor(this.timePassed / 30) % 60;
+      this.minutes = Math.floor(totalSeconds / 60);
+
+      if (this.lastSpawnTime + this.spawnInterval <= totalSeconds) {
+        // this.enemies.push(new Monster(this));
+        this.populateEnemies(this.spawnAmount);
+        this.lastSpawnTime = totalSeconds;
+      }
+
+      if (totalSeconds === 30) {
+        // console.log(this.spawnInterval);
+        this.spawnInterval = 1;
+        this.spawnAmount = 2;
+      } // if (totalSeconds === 15){
+      //     this.spawnInterval = 1;
+      // }
+
     }
   }, {
     key: "draw",
@@ -212,10 +242,18 @@ var Game = /*#__PURE__*/function () {
       this.player.draw(ctx);
       this.enemies.forEach(function (enemy) {
         enemy.draw(ctx);
-      }); //Borders
+      }); //Display Time
 
-      this.borders.forEach(function (border) {//border.draw(ctx)
-      }); //draw circle
+      ctx.font = "700 40px Arial"; // ctx.fillStyle = "black";
+
+      ctx.lineWidth = 2;
+      ctx.strokeText("Time : ".concat(this.minutes, ":").concat(this.seconds < 10 ? "0" : "").concat(this.seconds), 10, 50); //Diplay Kills
+
+      ctx.strokeText("Kills : ".concat(this.totalKills), 10, 100); //Borders
+      // this.borders.forEach(border => {
+      //     border.draw(ctx)
+      // });
+      //draw circle
       // ctx.beginPath();
       // ctx.arc(10, 10, 10, 0, 2 * Math.PI);
       // ctx.strokeStyle = "red";
@@ -360,17 +398,18 @@ var Monster = /*#__PURE__*/function (_MovingObject) {
 
     _classCallCheck(this, Monster);
 
-    _this = _super.call(this, game.DIM_X - 60, //x
-    game.DIM_Y - 100 - 110, //y
-    50, //width
+    var randNum = Math.random();
+    _this = _super.call(this, // game.DIM_X  - 60, //x
+    // game.DIM_Y - 100 - 110, //y
+    game.DIM_X + 10 + Math.floor(randNum * 100), game.DIM_Y - 100 - Math.floor(randNum * (game.DIM_Y - 100)), 50, //width
     50, //height
     "red", //color
     game);
     _this.vel.x = -5;
     _this.vel.y = -3;
     _this.maxMoveSpeed = 10;
-    _this.maxRange = 30;
-    _this.current = 0;
+    _this.maxRange = Math.floor(randNum * 30) + 30;
+    _this.current = Math.round(randNum * _this.maxMoveSpeed * 2) - _this.maxMoveSpeed / 2;
     _this.sprite = new _monster_sprite__WEBPACK_IMPORTED_MODULE_1__.default();
     return _this;
   } // on death create death animation sprite to the game object
@@ -429,7 +468,7 @@ var MonsterSprite = /*#__PURE__*/function () {
     this.rows = 4;
     this.width = this.spriteWidth / this.cols;
     this.height = this.spriteHeight / this.rows;
-    this.curFrame = 0;
+    this.curFrame = Math.floor(Math.random() * 16);
     this.frameCount = 16;
     this.srcX = 0;
     this.srcY = 0;
@@ -588,6 +627,7 @@ var Player = /*#__PURE__*/function (_MovingObject) {
     _this.motion = "idle"; //Attack Variables
 
     _this.attackFrames = 0;
+    _this.attackDelay = 0;
     _this.attacking = false; //Attack Hit Boxes + Variables
 
     _this.range = {
@@ -640,10 +680,12 @@ var Player = /*#__PURE__*/function (_MovingObject) {
     key: "attack",
     value: function attack(attackKey) {
       this.attackFrames != 0 ? this.attackFrames-- : this.attacking = false;
+      if (this.attackDelay != 0 && !this.attacking) this.attackDelay--;
 
-      if (attackKey && !this.attacking) {
+      if (attackKey && !this.attacking && this.attackDelay === 0) {
         this.attacking = true;
         this.attackFrames = 12;
+        this.attackDelay = 6;
       }
 
       if (this.attacking) {
@@ -958,9 +1000,14 @@ __webpack_require__.r(__webpack_exports__);
 
 
 document.addEventListener("DOMContentLoaded", function () {
-  console.log("Webpack is working");
+  // console.log("Webpack is working")
   var gameview = new _game_view__WEBPACK_IMPORTED_MODULE_1__.default();
-  gameview.start(); // let moving_object = new MovingObject(GAME_WIDTH, GAME_HEIGHT)
+  var gameStartButton = document.querySelector(".start-button.front");
+  gameStartButton.addEventListener("click", function () {
+    gameview.start();
+    gameStartButton.classList.add("hidden");
+    document.querySelector(".start-button.back").classList.add("hidden");
+  }); // let moving_object = new MovingObject(GAME_WIDTH, GAME_HEIGHT)
   // moving_object.draw(ctx);
   // ctx.fillStyle = "blue"
   // ctx.fillRect(0, 0, 20, 20)

@@ -8,7 +8,7 @@ export default class MonsterSprite{
         this.width = this.spriteWidth / this.cols;
         this.height = this.spriteHeight / this.rows;
 
-        this.curFrame = 0;
+        this.curFrame = Math.floor(Math.random() * 16);
         this.frameCount = 16;
 
         this.srcX = 0;

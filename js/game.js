@@ -15,15 +15,22 @@ export default class Game{
             rightKey: false,
             attackKey: false
         }
+        //Time Vars
         this.timePassed = 0;
+        this.lastSpawnTime = 0;
+        this.spawnInterval = 3;
+        //Background
         this.background = new Image();
         this.background.src = "./assets/background/game-background.jpeg";
         this.player = new Player(this);
         //this.monster = new Monster(this);
         this.borders = [];
+
         this.enemies = [];
         this.populateBorders();
-        this.populateEnemies();
+        this.spawnAmount = 2;
+        this.populateEnemies(this.spawnAmount);
+        this.totalKills = 0;
     }
 
     populateBorders(){
@@ -31,8 +38,8 @@ export default class Game{
             this.borders.push(new Border(0 + 100 * i,  this.DIM_Y - 100, 100, 100, 1))
         }
     }
-    populateEnemies(){
-        for (let i = 0; i < 1; i++) {
+    populateEnemies(amount){
+        for (let i = 0; i < amount; i++) {
             this.enemies.push(new Monster(this))
         }
     }
@@ -65,6 +72,28 @@ export default class Game{
             enemy.step();
         });
         this.handleCollisions();
+        this.timePassed++;
+        this.timeActions();
+    }
+
+    timeActions(){
+        let totalSeconds = Math.floor(this.timePassed/30);
+        this.seconds = Math.floor(this.timePassed / 30) % 60;
+        this.minutes = Math.floor(totalSeconds/60);
+
+        if (this.lastSpawnTime + this.spawnInterval <= totalSeconds){
+            // this.enemies.push(new Monster(this));
+            this.populateEnemies(this.spawnAmount);
+            this.lastSpawnTime = totalSeconds;
+        }
+        if (totalSeconds === 30){
+            // console.log(this.spawnInterval);
+            this.spawnInterval = 1;
+            this.spawnAmount = 2;
+        }
+        // if (totalSeconds === 15){
+        //     this.spawnInterval = 1;
+        // }
     }
 
     draw(ctx) {
@@ -79,11 +108,19 @@ export default class Game{
         this.enemies.forEach(enemy => {
             enemy.draw(ctx);
         });
-        //Borders
-        this.borders.forEach(border => {
+        //Display Time
+        ctx.font = "700 40px Arial";
+        // ctx.fillStyle = "black";
+        ctx.lineWidth = 2;
+        ctx.strokeText(`Time : ${this.minutes}:${this.seconds<10?"0":""}${this.seconds}`, 10, 50);
 
-            //border.draw(ctx)
-        });
+        //Diplay Kills
+        ctx.strokeText(`Kills : ${this.totalKills}`, 10, 100);
+        //Borders
+        // this.borders.forEach(border => {
+
+        //     border.draw(ctx)
+        // });
 
         //draw circle
         // ctx.beginPath();

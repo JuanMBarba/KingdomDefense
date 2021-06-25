@@ -21,6 +21,7 @@ export default class Player extends MovingObject{
         this.motion = "idle";
         //Attack Variables
         this.attackFrames = 0;
+        this.attackDelay = 0
         this.attacking = false;
         //Attack Hit Boxes + Variables
         this.range = {
@@ -73,9 +74,11 @@ export default class Player extends MovingObject{
 
     attack(attackKey){
         this.attackFrames != 0 ? this.attackFrames-- : this.attacking = false;
-        if(attackKey && !this.attacking){
+        if (this.attackDelay != 0 && !this.attacking) this.attackDelay--;
+        if(attackKey && !this.attacking && this.attackDelay === 0){
             this.attacking = true;
             this.attackFrames = 12;
+            this.attackDelay = 6;
         }
         if (this.attacking){
             this.motion = "attack";
