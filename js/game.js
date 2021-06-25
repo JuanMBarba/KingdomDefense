@@ -4,10 +4,10 @@ import Monster from "./monster";
 import Border from "./border";
 
 export default class Game{
-    constructor(){
+    constructor(gameView){
         this.DIM_X = 1200;
         this.DIM_Y = 600;
-
+        this.gameView = gameView;
         this.keys = {
             upKey: false,
             downKey: false,
@@ -32,7 +32,7 @@ export default class Game{
         this.populateEnemies(this.spawnAmount);
         this.totalKills = 0;
         //Town Vars
-        this.townDestruction = 0;
+        this.kingdomHealth = 100;
     }
 
     populateBorders(){
@@ -67,6 +67,17 @@ export default class Game{
             });
         }
         
+        let deleteIndex = [];
+        this.enemies.forEach((enemy, idx) => {
+            if(enemy.pos.x < -55){
+                this.kingdomHealth -= 25;
+                deleteIndex.push(idx - deleteIndex.length);
+            }
+        });
+
+        deleteIndex.forEach(idx => {
+            this.enemies.splice(idx, 1);
+        });
         //Handle Despawn
     }
 
@@ -131,10 +142,23 @@ export default class Game{
         ctx.font = "700 40px Arial";
         // ctx.fillStyle = "black";
         ctx.lineWidth = 2;
+        ctx.strokeStyle="black"
         ctx.strokeText(`Time : ${this.minutes}:${this.seconds<10?"0":""}${this.seconds}`, 10, 50);
 
         //Diplay Kills
         ctx.strokeText(`Kills  : ${this.totalKills}`, 10, 100);
+        //Diplay Town Destuction
+        ctx.strokeStyle = "white";
+        ctx.strokeText(`Kingdom Health : ${this.kingdomHealth < 0 ? 0 : this.kingdomHealth}%`, 10, this.DIM_Y - 30);
+
+        if (this.kingdomHealth <= 0) {
+            //endgame
+            clearInterval(this.gameView.gameLoop)
+            ctx.fillStyle = "rgba(0,0,0, 0.4)";
+            ctx.fillRect(0, 0, 1200, 600);
+            document.querySelector(".start-button.front.retry").classList.remove("hidden");
+            document.querySelector(".start-button.back.retry").classList.remove("hidden");
+        }
         //Borders
         // this.borders.forEach(border => {
 

@@ -132,11 +132,12 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
 
 var Game = /*#__PURE__*/function () {
-  function Game() {
+  function Game(gameView) {
     _classCallCheck(this, Game);
 
     this.DIM_X = 1200;
     this.DIM_Y = 600;
+    this.gameView = gameView;
     this.keys = {
       upKey: false,
       downKey: false,
@@ -161,7 +162,7 @@ var Game = /*#__PURE__*/function () {
     this.populateEnemies(this.spawnAmount);
     this.totalKills = 0; //Town Vars
 
-    this.townDestruction = 0;
+    this.kingdomHealth = 100;
   }
 
   _createClass(Game, [{
@@ -200,8 +201,18 @@ var Game = /*#__PURE__*/function () {
 
           _this.totalKills++;
         });
-      } //Handle Despawn
+      }
 
+      var deleteIndex = [];
+      this.enemies.forEach(function (enemy, idx) {
+        if (enemy.pos.x < -55) {
+          _this.kingdomHealth -= 25;
+          deleteIndex.push(idx - deleteIndex.length);
+        }
+      });
+      deleteIndex.forEach(function (idx) {
+        _this.enemies.splice(idx, 1);
+      }); //Handle Despawn
     }
   }, {
     key: "step",
@@ -268,9 +279,22 @@ var Game = /*#__PURE__*/function () {
       ctx.font = "700 40px Arial"; // ctx.fillStyle = "black";
 
       ctx.lineWidth = 2;
+      ctx.strokeStyle = "black";
       ctx.strokeText("Time : ".concat(this.minutes, ":").concat(this.seconds < 10 ? "0" : "").concat(this.seconds), 10, 50); //Diplay Kills
 
-      ctx.strokeText("Kills  : ".concat(this.totalKills), 10, 100); //Borders
+      ctx.strokeText("Kills  : ".concat(this.totalKills), 10, 100); //Diplay Town Destuction
+
+      ctx.strokeStyle = "white";
+      ctx.strokeText("Kingdom Health : ".concat(this.kingdomHealth < 0 ? 0 : this.kingdomHealth, "%"), 10, this.DIM_Y - 30);
+
+      if (this.kingdomHealth <= 0) {
+        //endgame
+        clearInterval(this.gameView.gameLoop);
+        ctx.fillStyle = "rgba(0,0,0, 0.4)";
+        ctx.fillRect(0, 0, 1200, 600);
+        document.querySelector(".start-button.front.retry").classList.remove("hidden");
+        document.querySelector(".start-button.back.retry").classList.remove("hidden");
+      } //Borders
       // this.borders.forEach(border => {
       //     border.draw(ctx)
       // });
@@ -281,6 +305,7 @@ var Game = /*#__PURE__*/function () {
       // ctx.stroke();
       // ctx.fillStyle = "red";
       // ctx.fill();
+
     }
   }]);
 
@@ -318,7 +343,7 @@ var GameView = /*#__PURE__*/function () {
     this.ctx = this.canvas.getContext("2d");
     this.canvas.width = 1200;
     this.canvas.height = 600;
-    this.game = new _game__WEBPACK_IMPORTED_MODULE_0__.default();
+    this.game = new _game__WEBPACK_IMPORTED_MODULE_0__.default(this);
   }
 
   _createClass(GameView, [{
@@ -326,6 +351,7 @@ var GameView = /*#__PURE__*/function () {
     value: function start() {
       var _this = this;
 
+      this.game = new _game__WEBPACK_IMPORTED_MODULE_0__.default(this);
       this.bindKeyHandlers();
       this.gameLoop = setInterval(function () {
         _this.game.step(), _this.game.draw(_this.ctx);
@@ -1028,7 +1054,15 @@ document.addEventListener("DOMContentLoaded", function () {
     gameview.start();
     gameStartButton.classList.add("hidden");
     document.querySelector(".start-button.back").classList.add("hidden");
-  }); // let moving_object = new MovingObject(GAME_WIDTH, GAME_HEIGHT)
+  });
+  var gameResetButton = document.querySelector(".start-button.front.retry");
+  gameResetButton.addEventListener("click", function () {
+    gameview.start();
+    gameResetButton.classList.add("hidden");
+    document.querySelector(".start-button.back.retry").classList.add("hidden");
+  }); // document.querySelector(".retry").classList.remove("hidden");
+  // document.querySelector(".retry").classList.remove("hidden");
+  // let moving_object = new MovingObject(GAME_WIDTH, GAME_HEIGHT)
   // moving_object.draw(ctx);
   // ctx.fillStyle = "blue"
   // ctx.fillRect(0, 0, 20, 20)
