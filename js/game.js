@@ -89,6 +89,12 @@ export default class Game{
         this.handleCollisions();
         this.timePassed++;
         this.timeActions();
+
+        //music controls
+        let audio = document.getElementById("battle-music");
+        if(audio.currentTime >= 158){
+            audio.currentTime = 2.4;
+        }
     }
 
     timeActions(){

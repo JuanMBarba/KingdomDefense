@@ -223,7 +223,13 @@ var Game = /*#__PURE__*/function () {
       });
       this.handleCollisions();
       this.timePassed++;
-      this.timeActions();
+      this.timeActions(); //music controls
+
+      var audio = document.getElementById("battle-music");
+
+      if (audio.currentTime >= 158) {
+        audio.currentTime = 2.4;
+      }
     }
   }, {
     key: "timeActions",
@@ -1054,12 +1060,20 @@ document.addEventListener("DOMContentLoaded", function () {
     gameview.start();
     gameStartButton.classList.add("hidden");
     document.querySelector(".start-button.back").classList.add("hidden");
+    var audio = document.getElementById("battle-music");
+    audio.volume = 0.1; // audio.currentTime = ;
+
+    audio.play();
   });
   var gameResetButton = document.querySelector(".start-button.front.retry");
   gameResetButton.addEventListener("click", function () {
     gameview.start();
     gameResetButton.classList.add("hidden");
     document.querySelector(".start-button.back.retry").classList.add("hidden");
+    var audio = document.getElementById("battle-music");
+    audio.volume = 0.1;
+    audio.currentTime = 0;
+    audio.play();
   }); // document.querySelector(".retry").classList.remove("hidden");
   // document.querySelector(".retry").classList.remove("hidden");
   // let moving_object = new MovingObject(GAME_WIDTH, GAME_HEIGHT)
