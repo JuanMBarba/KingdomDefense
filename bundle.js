@@ -1055,6 +1055,15 @@ __webpack_require__.r(__webpack_exports__);
 document.addEventListener("DOMContentLoaded", function () {
   // console.log("Webpack is working")
   var gameview = new _game_view__WEBPACK_IMPORTED_MODULE_1__.default();
+  setupEventHandlers(gameview); // document.querySelector(".retry").classList.remove("hidden");
+  // document.querySelector(".retry").classList.remove("hidden");
+  // let moving_object = new MovingObject(GAME_WIDTH, GAME_HEIGHT)
+  // moving_object.draw(ctx);
+  // ctx.fillStyle = "blue"
+  // ctx.fillRect(0, 0, 20, 20)
+});
+
+function setupEventHandlers(gameview) {
   var gameStartButton = document.querySelector(".start-button.front");
   gameStartButton.addEventListener("click", function () {
     gameview.start();
@@ -1074,13 +1083,24 @@ document.addEventListener("DOMContentLoaded", function () {
     audio.volume = 0.1;
     audio.currentTime = 0;
     audio.play();
-  }); // document.querySelector(".retry").classList.remove("hidden");
-  // document.querySelector(".retry").classList.remove("hidden");
-  // let moving_object = new MovingObject(GAME_WIDTH, GAME_HEIGHT)
-  // moving_object.draw(ctx);
-  // ctx.fillStyle = "blue"
-  // ctx.fillRect(0, 0, 20, 20)
-});
+  });
+  var muteButtons = document.querySelectorAll(".mute-button");
+  muteButtons.forEach(function (muteButton) {
+    muteButton.addEventListener("click", function () {
+      var audio = document.getElementById("battle-music");
+      audio.volume = audio.volume > 0 ? 0 : 0.1;
+      var hiddenMute = document.querySelector(".mute-button.hidden");
+      muteButton.classList.add("hidden");
+      hiddenMute.classList.remove("hidden");
+    });
+  });
+  var modal = document.querySelector(".modal");
+  modal.addEventListener("click", function (event) {
+    if (event.target.classList.contains("close")) {
+      modal.classList.add("hidden");
+    }
+  });
+}
 })();
 
 /******/ })()
