@@ -14,13 +14,21 @@
     <link rel="stylesheet" href="./css/main.css">
     <link rel="icon" href="./assets/favicon/favicon.png" type="image/x-icon">
     <script src="./bundle.js" charset="utf-8"></script>
+    
+    <script src="https://kit.fontawesome.com/edfc2e67bf.js" crossorigin="anonymous"></script>
     <title>Kingdom Defense</title>
 </head>
 <body>
     <h1 id="main-logo"><img
             src="https://see.fontimg.com/api/renderfont4/8MRj2/eyJyIjoiZnMiLCJoIjoxMzAsInciOjIwMDAsImZzIjo2NSwiZmdjIjoiIzAwMDAwMCIsImJnYyI6IiNGRkZGRkYiLCJ0IjoxfQ/S2luZ2RvbSBEZWZlbnNl/alabasta-regular.png"
             alt="Old English fonts"></h1>
-    <div>
+
+    <div class="header-nav">
+        <a href="https://github.com/JuanMBarba">
+            <i class="fab fa-github"></i>
+        </a>
+    </div>
+    <div id="game-container">
         <canvas id="canvas"></canvas>
         <button class="start-button back"><img src="" alt=""></button>
         <button class="start-button front"><img
@@ -30,7 +38,31 @@
         <button class="start-button front hidden retry"><img
                 src="https://see.fontimg.com/api/renderfont4/8MRj2/eyJyIjoiZnMiLCJoIjoxMzAsInciOjIwMDAsImZzIjo2NSwiZmdjIjoiIzAwMDAwMCIsImJnYyI6IiNGRkZGRkYiLCJ0IjoxfQ/UmV0cnk/alabasta-regular.png"
                 alt="Old English fonts"></button>
+        <button class="mute-button"><i class="fas fa-volume-up"></i></button>
+        <button class="mute-button muted hidden"><i class="fas fa-volume-mute"></i></button>
     </div>
+    <div class="modal">
+        <div class="modal-screen close"></div>
+        <div id="modal-box">
+            <h1>Welcome to Kingdom Defense</h1>
+            <p>
+            The objective of the game is to prevent the hoard of enemies from making it to your kingdom in the west.
+            Every time an enemy makes it past you, your kingdom will take damage.
+            See how far you can go!
+            </p>
+            
+            <h1>Controls</h1>
+            <div id="controls-container">
+                <div>W = Jump / Double Jump</div>
+                <div>A = Move Left</div>
+                <div>D = Move Right</div>
+                <div>P = Attack</div>
+            </div>
+            <div class="modal-close close">❌</div>
+        </div>
+        
+    </div>
+    
     <div>
         <audio id="battle-music" src="./assets/music/battle.mp3" type="audio/mpeg">
     </div>
