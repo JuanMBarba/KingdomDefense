@@ -1070,7 +1070,7 @@ function setupEventHandlers(gameview) {
     gameStartButton.classList.add("hidden");
     document.querySelector(".start-button.back").classList.add("hidden");
     var audio = document.getElementById("battle-music");
-    audio.volume = 0.1; // audio.currentTime = ;
+    audio.volume = audio.volume >= 0.1 ? 0.1 : 0; // audio.currentTime = ;
 
     audio.play();
   });
@@ -1079,8 +1079,8 @@ function setupEventHandlers(gameview) {
     gameview.start();
     gameResetButton.classList.add("hidden");
     document.querySelector(".start-button.back.retry").classList.add("hidden");
-    var audio = document.getElementById("battle-music");
-    audio.volume = 0;
+    var audio = document.getElementById("battle-music"); // audio.volume = 0;
+
     audio.currentTime = 0;
     audio.play();
   });
