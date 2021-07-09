@@ -93,9 +93,9 @@ div{
     margin-top: 10px;
 }
 
-.mute-button{
+.mute-button, .controls-button{
     /* position: absolute; */
-    font-size: larger;
+    font-size: 50px;
     /* color: white; */
     /* right: 20px; */
     /* bottom: 0px; */
@@ -103,15 +103,13 @@ div{
     padding-left: 15px;
     border-radius: 10px;
     cursor: pointer;
+    margin-left: 10px;
 }
 
-.mute-button:hover{
+.mute-button:hover, .controls-button:hover{
     background-color: rgba(0,0,0, 0.2);
 }
 
-.mute-button i{
-    font-size: 50px;
-}
 
 .modal {
     display: block;

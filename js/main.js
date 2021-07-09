@@ -53,11 +53,19 @@ function setupEventHandlers(gameview){
         })
     }) 
 
+    
+
     let modal = document.querySelector(".modal");
 
     modal.addEventListener("click", (event) => {
         if(event.target.classList.contains("close")){
             modal.classList.add("hidden");
         }
+    })
+
+    let controlsButton = document.querySelector(".controls-button");
+
+    controlsButton.addEventListener("click", () => {
+        modal.classList.remove("hidden");
     })
 }
