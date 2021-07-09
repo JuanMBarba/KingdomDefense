@@ -1100,6 +1100,10 @@ function setupEventHandlers(gameview) {
       modal.classList.add("hidden");
     }
   });
+  var controlsButton = document.querySelector(".controls-button");
+  controlsButton.addEventListener("click", function () {
+    modal.classList.remove("hidden");
+  });
 }
 })();
 
