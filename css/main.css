@@ -31,9 +31,9 @@ body{
     margin-right: 10px;
 }
 
-div{
+/* div{
     position: relative;
-}
+} */
 
 #canvas{
     /* width: 1200px;
@@ -44,10 +44,11 @@ div{
 
 .start-button{
     position: absolute;
-    left: 0;
-    right: 0;
+    left: 50%;
+    right: 50%;
     top: 50%;
-    margin: auto;
+    transform: translate(-50%, -50%);
+    margin: 0 auto;
     cursor: pointer;
     padding: 20px;
     border: 1px solid black;
@@ -84,6 +85,7 @@ div{
     display: flex;
     flex-direction: column;
     justify-content: center;
+    position: relative;
 }
 
 .footer{
