@@ -1,13 +1,6 @@
 # Kingdom Defense
 Kingdom Defense is a base defense action game where you take control of the playable character, who will be able to run, jump, and attack enemies on the field. You will have to fight back the invasion for as long as possible.
 
-# MVPs
-User's will be able to:
-- Move a playable character left or right
-- Make the playable character jump
-- Attack enemy charcters with weapons/abilities
-  - Enemy characters will move around
-- Create endless game loop that progressively gets harder
 
 # Wireframes
 ![WireFrame](https://user-images.githubusercontent.com/50244853/122831243-7389ab80-d29e-11eb-9853-1103b27cd1a5.png)
